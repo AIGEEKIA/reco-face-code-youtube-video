@@ -1,0 +1,64 @@
+# Détecteur de Visage Python : Filtres Snapchat & IA Emotionnelle
+# Tutoriel pour débutants - par [Votre Nom/Votre Chaîne]
+
+# Import des librairies essentielles
+import cv2  # OpenCV : pour la vision par ordinateur
+import mediapipe as mp  # MediaPipe : pour la détection de visages et de landmarks
+
+# Initialisation du détecteur de visage de MediaPipe
+mp_face_mesh = mp.solutions.face_mesh  # On crée un objet FaceMesh
+face_mesh = mp_face_mesh.FaceMesh(static_image_mode=False,  # Mode image statique désactivé (pour la vidéo)
+                                  max_num_faces=1,  # Nombre maximum de visages à détecter
+                                  refine_landmarks=True,  # Amélioration de la précision des landmarks
+                                  min_detection_confidence=0.5,  # Confiance minimale pour la détection du visage
+                                  min_tracking_confidence=0.5)  # Confiance minimale pour le suivi des landmarks
+
+mp_drawing = mp.solutions.drawing_utils  # Utilitaire pour dessiner les landmarks
+
+# Fonction pour traiter une image et détecter les landmarks
+def process_image(image_path):
+    """
+    Charge une image, détecte les landmarks du visage et les affiche.
+
+    Args:
+        image_path (str): Le chemin vers l'image à traiter.
+    """
+    try:  # Pour gérer les erreurs si l'image n'est pas trouvée
+
+        # 1. Charger l'image avec OpenCV
+        image = cv2.imread(image_path)
+        if image is None:  # Vérifier si l'image a été chargée correctement
+            raise FileNotFoundError(f"Impossible de charger l'image : {image_path}. Vérifiez le chemin.")
+
+        # 2. Convertir l'image en RGB (MediaPipe préfère RGB)
+        image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+        # 3. Détecter les landmarks du visage avec MediaPipe
+        results = face_mesh.process(image_rgb)
+        # 4. Dessiner les landmarks sur l'image (si des visages sont détectés)
+        if results.multi_face_landmarks:
+            for face_landmarks in results.multi_face_landmarks:
+                mp_drawing.draw_landmarks(image=image,  # L'image sur laquelle on dessine
+                                          landmark_list=face_landmarks,  # La liste des landmarks à dessiner
+                                          connections=mp_face_mesh.FACEMESH_TESSELATION,  # Les connexions entre les landmarks (pour le maillage)
+                                          landmark_drawing_spec=mp_drawing.DrawingSpec(color=(0, 255, 0),  # Couleur des landmarks : vert
+                                                                                           thickness=1,  # Epaisseur des landmarks
+                                                                                           circle_radius=1),  # Rayon des cercles des landmarks
+                                          connection_drawing_spec=mp_drawing.DrawingSpec(color=(0, 0, 255),  # Couleur des connexions : bleu
+                                                                                             thickness=1))  # Epaisseur des connexions
+
+        # 5. Afficher l'image avec les landmarks
+        cv2.imshow("Détection de Visage avec MediaPipe", image)
+        cv2.waitKey(0)  # Attendre qu'une touche soit pressée pour fermer la fenêtre
+        cv2.destroyAllWindows()  # Fermer toutes les fenêtres OpenCV
+
+    except FileNotFoundError as e:
+        print(f"Erreur : {e}") # Afficher l'erreur si le fichier n'est pas trouvé
+    except Exception as e:
+        print(f"Une erreur inattendue s'est produite : {e}")  # Afficher toute autre erreur
+
+# Code principal (s'exécute uniquement si le script est lancé directement)
+if __name__ == "__main__":
+    image_path = "monimage.jpg"  # Remplacez par le chemin vers votre image
+    process_image(image_path)
+
