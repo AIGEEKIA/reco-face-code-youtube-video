@@ -1,9 +1,8 @@
 # Détecteur de Visage Python
 # Tutoriel pour débutants
 
-# Ce code est destiné à un usage personnel et non commercial.
-# Il a été développé avec l'aide de Perplexity AI.
-
+ Ce code a été développé avec l'aide de Perplexity AI.
+# Tout usage doit être conforme aux conditions d'utilisation de Perplexity.
 
 
 # Import des librairies essentielles
