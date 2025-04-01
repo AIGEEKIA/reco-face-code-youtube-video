@@ -1,5 +1,10 @@
-# Détecteur de Visage Python : Filtres Snapchat & IA Emotionnelle
-# Tutoriel pour débutants - par [Votre Nom/Votre Chaîne]
+# Détecteur de Visage Python
+# Tutoriel pour débutants
+
+# Ce code est destiné à un usage personnel et non commercial.
+# Il a été développé avec l'aide de Perplexity AI.
+
+
 
 # Import des librairies essentielles
 import cv2  # OpenCV : pour la vision par ordinateur
